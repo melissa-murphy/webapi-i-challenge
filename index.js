@@ -27,20 +27,32 @@ server.get('/api/users/:id', (req, res) => {
     .findById(req.params.id)
     .then(user => {
       if (user.length === 0) {
-        sendUserError(404, "This user does not exist, please try again");
+        sendUserError(404, 'This user does not exist, please try again.');
         return;
       }
       res.json(user);
     })
     .catch(error => {
-      sendUserError(500, "Server error: could not find user", res);
+      sendUserError(500, 'Server error: could not find user.', res);
       return;
     });
-
 });
 
 server.delete('/api/users/:id', (req, res) => {
   // delete user by id
+  const id = req.params;
+  database
+    .remove(id)
+    .then(res => {
+      if (res === 0) {
+        sendUserError(404, `User#${id} does not exist. Please try again.`, res);
+        return;
+      }
+      res.json({ success: `User#${id} sucessfully queried.` });
+    })
+    .catch(error => {
+      sendUserError(500, `User#${id} does not exist. Please try again.`, res);
+    });
 });
 
 server.put('/api/users/:id', (req, res) => {
