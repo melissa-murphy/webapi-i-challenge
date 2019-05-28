@@ -3,12 +3,13 @@ const express = require('express');
 const db = require('./data/db');
 
 const server = express();
+server.use(express.json());
 
 server.get('/', (req, res) => {
   res.send('Hello World');
 });
 
-server.get('/users', (req, res) => {
+server.get('/api/users', (req, res) => {
   //   res.redirect('/api/users');
   //   res.status(200).json(users);
   db.find()
@@ -68,7 +69,7 @@ server.put('/api/users/:id', (req, res) => {
   // updates user and returns modified doc/state
   const { id } = req.params;
   const { name, bio } = req.body;
-  if (!name || !body) {
+  if (!name || !bio) {
     sendUserError(400).json({
       ErrorMessage: `Please provide the required name and bio`
     });
